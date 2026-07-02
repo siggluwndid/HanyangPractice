@@ -1,0 +1,16 @@
+{
+  "name": "hanyangpractice",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "test": "run"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "mongoose": "^9.7.3"
+  }
+}
