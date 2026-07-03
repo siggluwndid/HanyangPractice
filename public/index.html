@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🤫 우리 팀 대나무숲 (익명 건의함)</title>
+  <!-- 깔끔한 기본 디자인을 위한 Pico CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+</head>
+<body style="background-color: #111518; color: #fff; padding-top: 2rem;">
+
+  <main class="container" style="max-width: 600px;">
+    <div style="text-align: center; margin-bottom: 2rem;">
+      <h1>🤫 익명 소통 창구</h1>
+      <p>팀장에게 하고 싶은 말, 아이디어 피드백을 익명으로 끄적여보세요.</p>
+    </div>
+
+    <!-- 📝 1. 글쓰기 폼 서식 -->
+    <article>
+      <form id="suggestForm">
+        <label for="name">닉네임 (선택)</label>
+        <input type="text" id="name" placeholder="익명의 고양이">
+
+        <label for="content">내용 (필수)</label>
+        <textarea id="content" placeholder="민준 팀장님 백엔드 설계 지리네요..." required></textarea>
+
+        <button type="submit" class="headings">의견 날리기 🚀</button>
+      </form>
+    </article>
+
+    <hr />
+
+    <!-- 📂 2. 서버에서 받아온 글 목록이 출력될 공간 -->
+    <h2>💬 쌓인 의견들</h2>
+    <div id="suggestion-list">
+      <!-- 자바스크립트가 여기에 카드를 동적으로 꽂아 넣을 겁니다 -->
+    </div>
+  </main>
+<script>
+  // 1. 데이터 불러오기 함수
+  async function suggest() {
+      try {
+          const res = await fetch("/api/suggest");
+          const data = await res.json(); // 👈 await 추가!
+
+          const listdiv = document.getElementById("suggestion-list");
+          listdiv.innerHTML = ''; // 오타 's' 삭제 완료
+
+          data.forEach(item => {
+              const card = document.createElement('article');
+              card.innerHTML = `
+                <header style="display: flex; justify-content: space-between; padding: 0.5rem 1rem;">
+                  <strong>👤 ${item.name || '익명'}</strong>
+                </header>
+                <p style="margin: 0; padding: 1rem;">${item.content}</p>
+              `;
+              listdiv.appendChild(card); // 👈 화면에 장착하는 코드 추가!
+          });
+      }
+      catch (err) {
+          console.error("데이터 매칭 실패:", err);
+      }
+  };
+
+  // 2. 폼 제출 이벤트 리스너 (async 추가!)
+  document.getElementById("suggestForm").addEventListener("submit", async function (e) {
+      e.preventDefault(); // 멱살 잡기 최상단 배치 안착
+      
+      const name = document.getElementById("name").value;
+      const content = document.getElementById("content").value;
+      
+      try {
+          // fetch 결과를 res 변수에 담고, 오타(/api/suggest, body) 수정!
+          const res = await fetch("/api/suggest", {
+              method: "POST",
+              headers: {
+                  "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ name, content }) 
+          });
+
+          if (res.ok) { // 👈 소문자 res로 수정!
+              alert("🎉 대나무숲에 전달되었습니다!");
+              document.getElementById("suggestForm").reset();
+              suggest(); // 성공 시 새로고침
+          } else {
+              alert("🚨 에러가 발생했습니다!");
+          }
+      }
+      catch (err) {
+          alert("🚨 서버 전송에 실패했습니다!");
+      }
+  });
+
+  // 3. 페이지 최초 로드 시 실행 치트키
+  suggest();
+</script>
+</body>
+</html>
