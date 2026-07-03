@@ -3,7 +3,7 @@ const path = require("path")
 const connectDb = require("./config/db")
 const suggestrouter = require("./routes/suggestroute")
 
-const app = express.app();
+const app = express();
 
 //db연결
 connectDb();
