@@ -49,7 +49,7 @@
           data.forEach(item => {
               const card = document.createElement('article');
               card.innerHTML = `
-                <header style="display: flex; justify-content: space-between; padding: 0.5rem 1rem;">
+                <header style="display: flex; justify-content: space-between; padding: 0.5rem 1rem;" text-color = "black">
                   <strong>👤 ${item.name || '익명'}</strong>
                 </header>
                 <p style="margin: 0; padding: 1rem;">${item.content}</p>
